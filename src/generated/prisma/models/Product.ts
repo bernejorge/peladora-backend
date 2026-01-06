@@ -315,7 +315,7 @@ export type ProductCreateInput = {
   name: string
   description?: string | null
   unit: $Enums.Unit
-  weight: runtime.Decimal | runtime.DecimalJsLike | number | string
+  weight?: runtime.Decimal | runtime.DecimalJsLike | number | string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -328,7 +328,7 @@ export type ProductUncheckedCreateInput = {
   name: string
   description?: string | null
   unit: $Enums.Unit
-  weight: runtime.Decimal | runtime.DecimalJsLike | number | string
+  weight?: runtime.Decimal | runtime.DecimalJsLike | number | string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -366,7 +366,7 @@ export type ProductCreateManyInput = {
   name: string
   description?: string | null
   unit: $Enums.Unit
-  weight: runtime.Decimal | runtime.DecimalJsLike | number | string
+  weight?: runtime.Decimal | runtime.DecimalJsLike | number | string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -487,7 +487,7 @@ export type ProductCreateWithoutPriceHistoryInput = {
   name: string
   description?: string | null
   unit: $Enums.Unit
-  weight: runtime.Decimal | runtime.DecimalJsLike | number | string
+  weight?: runtime.Decimal | runtime.DecimalJsLike | number | string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -499,7 +499,7 @@ export type ProductUncheckedCreateWithoutPriceHistoryInput = {
   name: string
   description?: string | null
   unit: $Enums.Unit
-  weight: runtime.Decimal | runtime.DecimalJsLike | number | string
+  weight?: runtime.Decimal | runtime.DecimalJsLike | number | string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -549,7 +549,7 @@ export type ProductCreateWithoutPurchaseItemsInput = {
   name: string
   description?: string | null
   unit: $Enums.Unit
-  weight: runtime.Decimal | runtime.DecimalJsLike | number | string
+  weight?: runtime.Decimal | runtime.DecimalJsLike | number | string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -561,7 +561,7 @@ export type ProductUncheckedCreateWithoutPurchaseItemsInput = {
   name: string
   description?: string | null
   unit: $Enums.Unit
-  weight: runtime.Decimal | runtime.DecimalJsLike | number | string
+  weight?: runtime.Decimal | runtime.DecimalJsLike | number | string
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
