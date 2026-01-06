@@ -48,6 +48,11 @@ export type Supplier = Prisma.SupplierModel
  */
 export type Product = Prisma.ProductModel
 /**
+ * Model PriceHistory
+ * 
+ */
+export type PriceHistory = Prisma.PriceHistoryModel
+/**
  * Model Purchase
  * 
  */

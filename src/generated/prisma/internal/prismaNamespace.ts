@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Supplier: 'Supplier',
   Product: 'Product',
+  PriceHistory: 'PriceHistory',
   Purchase: 'Purchase',
   PurchaseItem: 'PurchaseItem'
 } as const
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "supplier" | "product" | "purchase" | "purchaseItem"
+    modelProps: "supplier" | "product" | "priceHistory" | "purchase" | "purchaseItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -552,6 +553,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductCountAggregateOutputType> | number
+        }
+      }
+    }
+    PriceHistory: {
+      payload: Prisma.$PriceHistoryPayload<ExtArgs>
+      fields: Prisma.PriceHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PriceHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PriceHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.PriceHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PriceHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.PriceHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.PriceHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.PriceHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PriceHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.PriceHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        update: {
+          args: Prisma.PriceHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.PriceHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PriceHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PriceHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.PriceHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.PriceHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePriceHistory>
+        }
+        groupBy: {
+          args: Prisma.PriceHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PriceHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PriceHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PriceHistoryCountAggregateOutputType> | number
         }
       }
     }
@@ -763,11 +838,23 @@ export const ProductScalarFieldEnum = {
   name: 'name',
   description: 'description',
   unit: 'unit',
+  weight: 'weight',
+  price: 'price',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const PriceHistoryScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  price: 'price',
+  changedAt: 'changedAt'
+} as const
+
+export type PriceHistoryScalarFieldEnum = (typeof PriceHistoryScalarFieldEnum)[keyof typeof PriceHistoryScalarFieldEnum]
 
 
 export const PurchaseScalarFieldEnum = {
@@ -890,20 +977,6 @@ export type ListEnumUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'PurchaseStatus'
- */
-export type EnumPurchaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PurchaseStatus'>
-    
-
-
-/**
- * Reference to a field of type 'PurchaseStatus[]'
- */
-export type ListEnumPurchaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PurchaseStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -914,6 +987,20 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PurchaseStatus'
+ */
+export type EnumPurchaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PurchaseStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PurchaseStatus[]'
+ */
+export type ListEnumPurchaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PurchaseStatus[]'>
     
 
 
@@ -1027,6 +1114,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   supplier?: Prisma.SupplierOmit
   product?: Prisma.ProductOmit
+  priceHistory?: Prisma.PriceHistoryOmit
   purchase?: Prisma.PurchaseOmit
   purchaseItem?: Prisma.PurchaseItemOmit
 }

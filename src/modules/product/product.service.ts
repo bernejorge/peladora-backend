@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -27,8 +27,27 @@ export class ProductService {
   }
 
   async update(id: number, data: UpdateProductDto) {
-    await this.findOne(id);
-    return this.prisma.product.update({ where: { id }, data });
+    // 1. Verificar si el producto existe
+  const product = await this.prisma.product.findUnique({ where: { id } });
+  if (!product) {
+    throw new NotFoundException(`Product ${id} not found`);
+  }
+
+  // 2. Registrar histórico si el precio cambia
+  if (data.price !== undefined && data.price !== Number(product.price)) {
+    await this.prisma.priceHistory.create({
+      data: {
+        productId: id,
+        price: product.price,
+      },
+    });
+  }
+
+  // 3. Actualizar el producto
+  return this.prisma.product.update({
+    where: { id },
+    data,
+  });
   }
 
   async remove(id: number) {

@@ -10,6 +10,7 @@
  */
 export type * from './models/Supplier.js'
 export type * from './models/Product.js'
+export type * from './models/PriceHistory.js'
 export type * from './models/Purchase.js'
 export type * from './models/PurchaseItem.js'
 export type * from './commonInputTypes.js'
