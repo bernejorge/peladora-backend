@@ -58,6 +58,7 @@ model Product {
   price       Decimal   @db.Decimal(14, 2) @default(0) // precio de venta actual
 
   purchaseItems PurchaseItem[]
+  orderItems    OrderItem[]
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -109,6 +110,7 @@ model Client {
   phone     String?
   address   String?
   notes     String?
+  orders    Order[]    // ← relación con órdenes
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -123,10 +125,63 @@ model Seller {
   email     String?   @unique
   phone     String?
   notes     String?
+  orders    Order[]    // ← relación con órdenes
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Si querés registrar ventas asociadas a este vendedor:
   // sales Sale[]
+}
+
+model Order {
+  id         Int            @id @default(autoincrement())
+  client     Client         @relation(fields: [clientId], references: [id])
+  clientId   Int
+  seller     Seller         @relation(fields: [sellerId], references: [id])
+  sellerId   Int
+
+  date       DateTime       @default(now())
+
+  status     OrderStatus    @default(DRAFT)
+  paymentStatus PaymentStatus @default(UNPAID)
+
+  items      OrderItem[]
+
+  total      Decimal        @db.Decimal(18, 2) @default(0)
+
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+
+  quantity  Decimal  @db.Decimal(10, 3)
+  unitPrice Decimal  @db.Decimal(14, 2)
+  lineTotal Decimal  @db.Decimal(18, 2) // cantidad × precio unitario
+
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  DRAFT
+  PROCESSING
+  PACKED
+  SHIPPED
+  COMPLETED
+  CANCELED
+}
+enum PaymentStatus {
+  UNPAID
+  PENDING
+  PARTIALLY_PAID
+  PAID
+  REFUNDED
 }

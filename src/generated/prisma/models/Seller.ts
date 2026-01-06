@@ -240,6 +240,7 @@ export type SellerWhereInput = {
   notes?: Prisma.StringNullableFilter<"Seller"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
+  orders?: Prisma.OrderListRelationFilter
 }
 
 export type SellerOrderByWithRelationInput = {
@@ -251,6 +252,7 @@ export type SellerOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  orders?: Prisma.OrderOrderByRelationAggregateInput
 }
 
 export type SellerWhereUniqueInput = Prisma.AtLeast<{
@@ -265,6 +267,7 @@ export type SellerWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Seller"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
+  orders?: Prisma.OrderListRelationFilter
 }, "id" | "email">
 
 export type SellerOrderByWithAggregationInput = {
@@ -305,6 +308,7 @@ export type SellerCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
 }
 
 export type SellerUncheckedCreateInput = {
@@ -316,6 +320,7 @@ export type SellerUncheckedCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type SellerUpdateInput = {
@@ -326,6 +331,7 @@ export type SellerUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
 }
 
 export type SellerUncheckedUpdateInput = {
@@ -337,6 +343,7 @@ export type SellerUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
 }
 
 export type SellerCreateManyInput = {
@@ -412,6 +419,112 @@ export type SellerSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
+export type SellerScalarRelationFilter = {
+  is?: Prisma.SellerWhereInput
+  isNot?: Prisma.SellerWhereInput
+}
+
+export type SellerCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.SellerCreateWithoutOrdersInput, Prisma.SellerUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.SellerCreateOrConnectWithoutOrdersInput
+  connect?: Prisma.SellerWhereUniqueInput
+}
+
+export type SellerUpdateOneRequiredWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.SellerCreateWithoutOrdersInput, Prisma.SellerUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.SellerCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.SellerUpsertWithoutOrdersInput
+  connect?: Prisma.SellerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SellerUpdateToOneWithWhereWithoutOrdersInput, Prisma.SellerUpdateWithoutOrdersInput>, Prisma.SellerUncheckedUpdateWithoutOrdersInput>
+}
+
+export type SellerCreateWithoutOrdersInput = {
+  firstName: string
+  lastName: string
+  email?: string | null
+  phone?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SellerUncheckedCreateWithoutOrdersInput = {
+  id?: number
+  firstName: string
+  lastName: string
+  email?: string | null
+  phone?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SellerCreateOrConnectWithoutOrdersInput = {
+  where: Prisma.SellerWhereUniqueInput
+  create: Prisma.XOR<Prisma.SellerCreateWithoutOrdersInput, Prisma.SellerUncheckedCreateWithoutOrdersInput>
+}
+
+export type SellerUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.SellerUpdateWithoutOrdersInput, Prisma.SellerUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.SellerCreateWithoutOrdersInput, Prisma.SellerUncheckedCreateWithoutOrdersInput>
+  where?: Prisma.SellerWhereInput
+}
+
+export type SellerUpdateToOneWithWhereWithoutOrdersInput = {
+  where?: Prisma.SellerWhereInput
+  data: Prisma.XOR<Prisma.SellerUpdateWithoutOrdersInput, Prisma.SellerUncheckedUpdateWithoutOrdersInput>
+}
+
+export type SellerUpdateWithoutOrdersInput = {
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SellerUncheckedUpdateWithoutOrdersInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type SellerCountOutputType
+ */
+
+export type SellerCountOutputType = {
+  orders: number
+}
+
+export type SellerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  orders?: boolean | SellerCountOutputTypeCountOrdersArgs
+}
+
+/**
+ * SellerCountOutputType without action
+ */
+export type SellerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SellerCountOutputType
+   */
+  select?: Prisma.SellerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SellerCountOutputType without action
+ */
+export type SellerCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
 
 
 export type SellerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -423,6 +536,8 @@ export type SellerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  orders?: boolean | Prisma.Seller$ordersArgs<ExtArgs>
+  _count?: boolean | Prisma.SellerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["seller"]>
 
 export type SellerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -459,10 +574,18 @@ export type SellerSelectScalar = {
 }
 
 export type SellerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["seller"]>
+export type SellerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  orders?: boolean | Prisma.Seller$ordersArgs<ExtArgs>
+  _count?: boolean | Prisma.SellerCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SellerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SellerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $SellerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Seller"
-  objects: {}
+  objects: {
+    orders: Prisma.$OrderPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     firstName: string
@@ -866,6 +989,7 @@ readonly fields: SellerFieldRefs;
  */
 export interface Prisma__SellerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  orders<T extends Prisma.Seller$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seller$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -920,6 +1044,10 @@ export type SellerFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  /**
    * Filter, which Seller to fetch.
    */
   where: Prisma.SellerWhereUniqueInput
@@ -938,6 +1066,10 @@ export type SellerFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  /**
    * Filter, which Seller to fetch.
    */
   where: Prisma.SellerWhereUniqueInput
@@ -955,6 +1087,10 @@ export type SellerFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Seller
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
   /**
    * Filter, which Seller to fetch.
    */
@@ -1004,6 +1140,10 @@ export type SellerFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  /**
    * Filter, which Seller to fetch.
    */
   where?: Prisma.SellerWhereInput
@@ -1052,6 +1192,10 @@ export type SellerFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  /**
    * Filter, which Sellers to fetch.
    */
   where?: Prisma.SellerWhereInput
@@ -1094,6 +1238,10 @@ export type SellerCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Seller
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
   /**
    * The data needed to create a Seller.
    */
@@ -1142,6 +1290,10 @@ export type SellerUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Seller
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
   /**
    * The data needed to update a Seller.
    */
@@ -1209,6 +1361,10 @@ export type SellerUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  /**
    * The filter to search for the Seller to update in case it exists.
    */
   where: Prisma.SellerWhereUniqueInput
@@ -1235,6 +1391,10 @@ export type SellerDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  /**
    * Filter which Seller to delete.
    */
   where: Prisma.SellerWhereUniqueInput
@@ -1255,6 +1415,30 @@ export type SellerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Seller.orders
+ */
+export type Seller$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
  * Seller without action
  */
 export type SellerDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1266,4 +1450,8 @@ export type SellerDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Seller
    */
   omit?: Prisma.SellerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
 }
