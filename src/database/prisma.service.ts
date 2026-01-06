@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client/extension';
+import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'node_modules/@types/pg/index.mjs';
+import { Pool } from 'pg';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
@@ -16,5 +16,6 @@ export class PrismaService extends PrismaClient {
     super({
       adapter: new PrismaPg(pool),
     });
+    
   }
 }
