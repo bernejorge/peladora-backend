@@ -50,13 +50,28 @@ model Supplier {
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-  name String
+  id          Int       @id @default(autoincrement())
+  name        String
   description String?
-  unit Unit
+  unit        Unit
+  weight      Decimal   @db.Decimal(10, 3) @default(0)          // cantidad de kilos (o unidades)
+  price       Decimal   @db.Decimal(14, 2) @default(0) // precio de venta actual
+
   purchaseItems PurchaseItem[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  priceHistory PriceHistory[] // relación con tabla de historial
+}
+
+model PriceHistory {
+  id         Int      @id @default(autoincrement())
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  Int
+
+  price      Decimal  @db.Decimal(14, 2)  // precio registrado en ese momento
+  changedAt  DateTime @default(now())     // fecha/hora de registro del precio
 }
 
 model Purchase {
