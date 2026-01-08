@@ -1215,6 +1215,8 @@ export const OrderScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
   sellerId: 'sellerId',
+  deliveryAddress: 'deliveryAddress',
+  deliveryTimeSlot: 'deliveryTimeSlot',
   date: 'date',
   status: 'status',
   paymentStatus: 'paymentStatus',

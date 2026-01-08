@@ -7,6 +7,7 @@ import { ProductModule } from './modules/product/product.module';
 import { ConfigModule } from '@nestjs/config';
 import { SellerModule } from './modules/seller/seller.module';
 import { ClientModule } from './modules/client/client.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { ClientModule } from './modules/client/client.module';
       isGlobal: true, // lo hace accesible en todos lados
     }),
     SellerModule,
-    ClientModule
+    ClientModule,
+    OrderModule
   ],
   controllers: [AppController],
   providers: [AppService],
