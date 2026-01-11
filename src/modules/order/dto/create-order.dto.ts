@@ -1,6 +1,6 @@
 /* eslint-disable  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsInt, IsNumber, ValidateNested } from 'class-validator';
+import { IsArray, IsDate, isDateString, IsInt, IsNumber, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class OrderItemDto {
@@ -25,6 +25,10 @@ export class CreateOrderDto {
   @ApiProperty({ example: 1 })
   @IsInt()
   sellerId: number;
+
+  @ApiPropertyOptional({ example: '2024-12-31T14:00:00Z' })
+  @IsDate()
+  deliveryDate?: string;
 
   @ApiProperty({ example: 'Calle Falsa 123, Rosario' })
   deliveryAddress: string;

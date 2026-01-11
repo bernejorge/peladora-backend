@@ -6,9 +6,16 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(data: CreateOrderDto) {
+
+    // Calculá fecha de entrega si no viene por body
+    const deliveryDate = data.deliveryDate
+      ? new Date(data.deliveryDate)
+      : getDefaultDeliveryDate();
+
+
     // 1) Calcular totales de ítems
     const itemsData = data.items.map((item) => ({
       productId: item.productId,
@@ -26,6 +33,7 @@ export class OrderService {
         sellerId: data.sellerId,
         deliveryAddress: data.deliveryAddress,
         deliveryTimeSlot: data.deliveryTimeSlot,
+        deliveryDate: deliveryDate,
         total: total,
         items: {
           create: itemsData,
@@ -96,4 +104,23 @@ export class OrderService {
     // Opcional: borrar los items automáticamente por cascada si lo tenés configurado
     return this.prisma.order.delete({ where: { id } });
   }
+
+}
+
+function getDefaultDeliveryDate(): Date {
+  const now = new Date();
+
+  // Hora límite para delivery hoy
+  const LIMITE_HOY = 19; // 19:00
+
+  // Si el horario actual es antes de las 19, entregamos hoy; si no, day+1
+  if (now.getHours() < LIMITE_HOY) {
+    return now;
+  }
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  // opcional: podés cero-hora si querés solo fecha
+  tomorrow.setHours(0, 0, 0, 0);
+
+  return tomorrow;
 }
