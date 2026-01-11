@@ -17,7 +17,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 @ApiTags('orders')
 @Controller('orders')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly orderService: OrderService) { }
 
   @Post()
   create(@Body() dto: CreateOrderDto) {
@@ -45,5 +45,10 @@ export class OrderController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.orderService.remove(id);
+  }
+
+  @Get('today')
+  async findOrdersForToday() {
+    return this.orderService.findOrdersForToday();
   }
 }

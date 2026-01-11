@@ -105,6 +105,31 @@ export class OrderService {
     return this.prisma.order.delete({ where: { id } });
   }
 
+  async findOrdersForToday() {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return this.prisma.order.findMany({
+      where: {
+        deliveryDate: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+        status: {
+          in: ['DRAFT', 'PROCESSING'],
+        },
+      },
+      include: {
+        items: true,
+        client: true,
+        seller: true,
+      }
+    });
+  }
+
+
 }
 
 function getDefaultDeliveryDate(): Date {
