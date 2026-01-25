@@ -1,9 +1,17 @@
-/* eslint-disable  */
+/* eslint-disable */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsDate, isDateString, IsInt, IsNumber, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
-class OrderItemDto {
+export class OrderItemDto {
   @ApiProperty({ example: 1 })
   @IsInt()
   productId: number;
@@ -22,18 +30,24 @@ export class CreateOrderDto {
   @IsInt()
   clientId: number;
 
-  @ApiProperty({ example: 1 })
+  // ✅ ahora es opcional (autogestión del cliente)
+  @ApiPropertyOptional({ example: 1 })
+  @IsOptional()
   @IsInt()
-  sellerId: number;
+  sellerId?: number;
 
   @ApiPropertyOptional({ example: '2024-12-31T14:00:00Z' })
-  @IsDate()
+  @IsOptional()
+  @IsDateString()
   deliveryDate?: string;
 
   @ApiProperty({ example: 'Calle Falsa 123, Rosario' })
+  @IsString()
   deliveryAddress: string;
 
   @ApiPropertyOptional({ example: '14:00-16:00' })
+  @IsOptional()
+  @IsString()
   deliveryTimeSlot?: string;
 
   @ApiPropertyOptional({ type: [OrderItemDto] })

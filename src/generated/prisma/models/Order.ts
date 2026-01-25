@@ -236,7 +236,7 @@ export type OrderGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type OrderGroupByOutputType = {
   id: number
   clientId: number
-  sellerId: number
+  sellerId: number | null
   deliveryDate: Date
   deliveryAddress: string
   deliveryTimeSlot: string | null
@@ -274,7 +274,7 @@ export type OrderWhereInput = {
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   id?: Prisma.IntFilter<"Order"> | number
   clientId?: Prisma.IntFilter<"Order"> | number
-  sellerId?: Prisma.IntFilter<"Order"> | number
+  sellerId?: Prisma.IntNullableFilter<"Order"> | number | null
   deliveryDate?: Prisma.DateTimeFilter<"Order"> | Date | string
   deliveryAddress?: Prisma.StringFilter<"Order"> | string
   deliveryTimeSlot?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -285,14 +285,14 @@ export type OrderWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
-  seller?: Prisma.XOR<Prisma.SellerScalarRelationFilter, Prisma.SellerWhereInput>
+  seller?: Prisma.XOR<Prisma.SellerNullableScalarRelationFilter, Prisma.SellerWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
-  sellerId?: Prisma.SortOrder
+  sellerId?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryDate?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryTimeSlot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -313,7 +313,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   clientId?: Prisma.IntFilter<"Order"> | number
-  sellerId?: Prisma.IntFilter<"Order"> | number
+  sellerId?: Prisma.IntNullableFilter<"Order"> | number | null
   deliveryDate?: Prisma.DateTimeFilter<"Order"> | Date | string
   deliveryAddress?: Prisma.StringFilter<"Order"> | string
   deliveryTimeSlot?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -324,14 +324,14 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
-  seller?: Prisma.XOR<Prisma.SellerScalarRelationFilter, Prisma.SellerWhereInput>
+  seller?: Prisma.XOR<Prisma.SellerNullableScalarRelationFilter, Prisma.SellerWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
 }, "id">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
-  sellerId?: Prisma.SortOrder
+  sellerId?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryDate?: Prisma.SortOrder
   deliveryAddress?: Prisma.SortOrder
   deliveryTimeSlot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -354,7 +354,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OrderScalarWhereWithAggregatesInput | Prisma.OrderScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Order"> | number
   clientId?: Prisma.IntWithAggregatesFilter<"Order"> | number
-  sellerId?: Prisma.IntWithAggregatesFilter<"Order"> | number
+  sellerId?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
   deliveryDate?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   deliveryAddress?: Prisma.StringWithAggregatesFilter<"Order"> | string
   deliveryTimeSlot?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -377,14 +377,14 @@ export type OrderCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutOrdersInput
-  seller: Prisma.SellerCreateNestedOneWithoutOrdersInput
+  seller?: Prisma.SellerCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
   id?: number
   clientId: number
-  sellerId: number
+  sellerId?: number | null
   deliveryDate?: Date | string
   deliveryAddress?: string
   deliveryTimeSlot?: string | null
@@ -408,14 +408,14 @@ export type OrderUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutOrdersNestedInput
-  seller?: Prisma.SellerUpdateOneRequiredWithoutOrdersNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryTimeSlot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -431,7 +431,7 @@ export type OrderUncheckedUpdateInput = {
 export type OrderCreateManyInput = {
   id?: number
   clientId: number
-  sellerId: number
+  sellerId?: number | null
   deliveryDate?: Date | string
   deliveryAddress?: string
   deliveryTimeSlot?: string | null
@@ -458,7 +458,7 @@ export type OrderUpdateManyMutationInput = {
 export type OrderUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryTimeSlot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -636,6 +636,14 @@ export type EnumPaymentStatusFieldUpdateOperationsInput = {
   set?: $Enums.PaymentStatus
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type OrderCreateNestedOneWithoutItemsInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutItemsInput, Prisma.OrderUncheckedCreateWithoutItemsInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutItemsInput
@@ -660,13 +668,13 @@ export type OrderCreateWithoutClientInput = {
   total?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  seller: Prisma.SellerCreateNestedOneWithoutOrdersInput
+  seller?: Prisma.SellerCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutClientInput = {
   id?: number
-  sellerId: number
+  sellerId?: number | null
   deliveryDate?: Date | string
   deliveryAddress?: string
   deliveryTimeSlot?: string | null
@@ -711,7 +719,7 @@ export type OrderScalarWhereInput = {
   NOT?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
   id?: Prisma.IntFilter<"Order"> | number
   clientId?: Prisma.IntFilter<"Order"> | number
-  sellerId?: Prisma.IntFilter<"Order"> | number
+  sellerId?: Prisma.IntNullableFilter<"Order"> | number | null
   deliveryDate?: Prisma.DateTimeFilter<"Order"> | Date | string
   deliveryAddress?: Prisma.StringFilter<"Order"> | string
   deliveryTimeSlot?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -789,13 +797,13 @@ export type OrderCreateWithoutItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutOrdersInput
-  seller: Prisma.SellerCreateNestedOneWithoutOrdersInput
+  seller?: Prisma.SellerCreateNestedOneWithoutOrdersInput
 }
 
 export type OrderUncheckedCreateWithoutItemsInput = {
   id?: number
   clientId: number
-  sellerId: number
+  sellerId?: number | null
   deliveryDate?: Date | string
   deliveryAddress?: string
   deliveryTimeSlot?: string | null
@@ -834,13 +842,13 @@ export type OrderUpdateWithoutItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutOrdersNestedInput
-  seller?: Prisma.SellerUpdateOneRequiredWithoutOrdersNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutOrdersNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryTimeSlot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -854,7 +862,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
 
 export type OrderCreateManyClientInput = {
   id?: number
-  sellerId: number
+  sellerId?: number | null
   deliveryDate?: Date | string
   deliveryAddress?: string
   deliveryTimeSlot?: string | null
@@ -876,13 +884,13 @@ export type OrderUpdateWithoutClientInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  seller?: Prisma.SellerUpdateOneRequiredWithoutOrdersNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutClientInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryTimeSlot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -897,7 +905,7 @@ export type OrderUncheckedUpdateWithoutClientInput = {
 
 export type OrderUncheckedUpdateManyWithoutClientInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryAddress?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryTimeSlot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1011,7 +1019,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  seller?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Order$sellerArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
@@ -1030,7 +1038,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  seller?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Order$sellerArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1047,7 +1055,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  seller?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Order$sellerArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectScalar = {
@@ -1068,30 +1076,30 @@ export type OrderSelectScalar = {
 export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "sellerId" | "deliveryDate" | "deliveryAddress" | "deliveryTimeSlot" | "date" | "status" | "paymentStatus" | "total" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  seller?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Order$sellerArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  seller?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Order$sellerArgs<ExtArgs>
 }
 export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  seller?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Order$sellerArgs<ExtArgs>
 }
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Order"
   objects: {
     client: Prisma.$ClientPayload<ExtArgs>
-    seller: Prisma.$SellerPayload<ExtArgs>
+    seller: Prisma.$SellerPayload<ExtArgs> | null
     items: Prisma.$OrderItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     clientId: number
-    sellerId: number
+    sellerId: number | null
     deliveryDate: Date
     deliveryAddress: string
     deliveryTimeSlot: string | null
@@ -1496,7 +1504,7 @@ readonly fields: OrderFieldRefs;
 export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  seller<T extends Prisma.SellerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SellerDefaultArgs<ExtArgs>>): Prisma.Prisma__SellerClient<runtime.Types.Result.GetResult<Prisma.$SellerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  seller<T extends Prisma.Order$sellerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$sellerArgs<ExtArgs>>): Prisma.Prisma__SellerClient<runtime.Types.Result.GetResult<Prisma.$SellerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Order$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1932,6 +1940,25 @@ export type OrderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Orders to delete.
    */
   limit?: number
+}
+
+/**
+ * Order.seller
+ */
+export type Order$sellerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Seller
+   */
+  select?: Prisma.SellerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Seller
+   */
+  omit?: Prisma.SellerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  where?: Prisma.SellerWhereInput
 }
 
 /**

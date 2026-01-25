@@ -82,19 +82,58 @@ export class OrderService {
   }
 
   async update(id: number, data: UpdateOrderDto) {
-    await this.findOne(id);
-    return this.prisma.order.update({
-      where: { id },
-      data,
-      include: {
-        client: true,
-        seller: true,
-        items: {
-          include: {
-            product: true,
+    const order = await this.prisma.order.findUnique({ where: { id } });
+    if (!order) throw new NotFoundException(`Order ${id} not found`);
+
+    const { items = [], ...orderData } = data;
+
+    // convertimos los items del DTO al formato que guardamos en la tabla orderItem
+    // y calculamos el total de línea (quantity * unitPrice)
+    const itemsData = items.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      lineTotal: item.quantity * item.unitPrice,
+    }));
+
+    const total = itemsData.reduce((sum, item) => sum + item.lineTotal, 0);
+
+    return this.prisma.$transaction(async (tx) => {
+      // Si no hay campos en orderData, evitamos hacer un update innecesario.
+      if (Object.keys(orderData).length > 0) {
+        await tx.order.update({
+          where: { id },
+          data: orderData,
+        });
+      }
+
+      // Borramos TODOS los items actuales de la orden
+      await tx.orderItem.deleteMany({ where: { orderId: id } });
+
+      if (itemsData.length > 0) {
+        // Si hay items, insertarlos desde cero con createMany.
+        // Esto simplifica mucho el update (no hacemos diff item por item).
+        await tx.orderItem.createMany({
+          data: itemsData.map((item) => ({
+            ...item,
+            orderId: id,
+          })),
+        });
+      }
+
+      return tx.order.update({
+        where: { id },
+        data: { total },
+        include: {
+          client: true,
+          seller: true,
+          items: {
+            include: {
+              product: true,
+            },
           },
         },
-      },
+      });
     });
   }
 

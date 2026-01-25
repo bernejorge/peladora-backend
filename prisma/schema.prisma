@@ -140,8 +140,8 @@ model Order {
   id         Int            @id @default(autoincrement())
   client     Client         @relation(fields: [clientId], references: [id])
   clientId   Int
-  seller     Seller         @relation(fields: [sellerId], references: [id])
-  sellerId   Int
+  seller     Seller?  @relation(fields: [sellerId], references: [id])
+  sellerId   Int?
 
   deliveryDate   DateTime       @default(now())  // ← fecha de entrega deseada
   deliveryAddress   String @default("")

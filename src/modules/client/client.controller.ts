@@ -46,4 +46,10 @@ export class ClientController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.clientService.remove(id);
   }
+  
+  @Get('semantic-search/:name')
+  searchByNameSemantic(@Param('name') name: string) {
+    return this.clientService.searchByNameSemantic(name);
+  }
+
 }

@@ -8,6 +8,8 @@ import { ConfigModule } from '@nestjs/config';
 import { SellerModule } from './modules/seller/seller.module';
 import { ClientModule } from './modules/client/client.module';
 import { OrderModule } from './modules/order/order.module';
+import { AgentToolsModule } from './modules/agent-tools/agent-tools.module';
+
 
 @Module({
   imports: [
@@ -17,7 +19,8 @@ import { OrderModule } from './modules/order/order.module';
     }),
     SellerModule,
     ClientModule,
-    OrderModule
+    OrderModule,
+    AgentToolsModule
   ],
   controllers: [AppController],
   providers: [AppService],
