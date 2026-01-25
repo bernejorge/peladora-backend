@@ -17,7 +17,7 @@ export class AgentToolsService {
 
    async searchClientByName(name: string) {
       try {
-         throw new Error('Simulated error for demonstration purposes');
+         //throw new Error('Simulated error for demonstration purposes');
          const clients = await this.clientService.searchByNameSemantic(name);
          return clients;
       } catch (error) {
