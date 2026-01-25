@@ -19,11 +19,12 @@ export class ClientService {
   async create(data: CreateClientDto) {
     try {
       // calculá el embedding semántico para el nombre
-      const vector = await generateEmbedding(data.name);
+      const normalizedName = data.name.toUpperCase();
 
+      const vector = await generateEmbedding(normalizedName);
       const client = await this.prisma.client.create({
         data: {
-          name: data.name,
+          name: normalizedName,
           email: data.email,
           phone: data.phone,
           address: data.address,
