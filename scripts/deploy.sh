@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# --- FIX: cargar NVM en shells no interactivos (GitHub Actions / appleboy) ---
 export NVM_DIR="/root/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  . "$NVM_DIR/nvm.sh"
-fi
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-# Elegí la versión (usa la default si ya está seteada)
-nvm use 20 >/dev/null 2>&1 || true
+# Usar la versión default del VPS (la que vos definís con nvm alias default)
+nvm use default
 
-# Alternativa extra (por si nvm no carga bien):
-export PATH="/root/.nvm/versions/node/v20.0.0/bin:$PATH"
-
-# ---------------------------------------------------------------------------
+echo "== Node =="
+node -v
+npm -v
 
 cd /var/www/peladora/app
 
