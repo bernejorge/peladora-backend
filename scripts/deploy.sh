@@ -20,12 +20,12 @@ git reset --hard origin/master
 echo "== Install deps =="
 npm ci
 
-echo "== Build =="
-npm run build
-
 echo "== Prisma =="
 npx prisma generate
 # npx prisma migrate deploy
+
+echo "== Build =="
+npm run build
 
 echo "== Restart PM2 =="
 pm2 reload peladora-backend --update-env || pm2 start dist/main.js --name peladora-backend
