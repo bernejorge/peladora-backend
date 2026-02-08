@@ -1,7 +1,7 @@
 import { OpenAI } from 'openai';
 
 const key = process.env.OPENAI_API_KEY;
-console.log('OpenAI API Key:', key);
+console.log('OpenAI API Key:', key ? 'Loaded' : 'Not Found');
 /**
  * Configurá el cliente de OpenAI.
  * Asegurate de tener definida la variable de entorno OPENAI_API_KEY.
