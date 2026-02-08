@@ -1,8 +1,11 @@
 /* eslint-disable  */
+//order.service.ts
+
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderStatus, PaymentStatus } from 'src/generated/prisma/enums';
 
 @Injectable()
 export class OrderService {
@@ -47,8 +50,10 @@ export class OrderService {
     return order;
   }
 
-  findAll() {
+ async findAll(filters?: any) {
+
     return this.prisma.order.findMany({
+      where: filters?.where || {},
       include: {
         client: true,
         seller: true,
@@ -58,7 +63,7 @@ export class OrderService {
           },
         },
       },
-      orderBy: {
+      orderBy: filters?.orderBy || {
         date: 'desc',
       },
     });
@@ -138,11 +143,36 @@ export class OrderService {
   }
 
   async remove(id: number) {
-    await this.findOne(id);
-
+    const order = await this.findOne(id);
+  
     // Opcional: borrar los items automáticamente por cascada si lo tenés configurado
     return this.prisma.order.delete({ where: { id } });
   }
+
+  async cancel(id: number) {
+    const order = await this.findOne(id);
+
+    const data: UpdateOrderDto = {
+      status: OrderStatus.CANCELED,
+    };
+
+    return this.update(id, data);
+  }
+
+  async findLatestForClient(clientId: number, n: number = 10) {
+  const take = Number.isFinite(n) ? Math.max(1, Math.min(100, Math.floor(n))) : 10;
+
+  return this.prisma.order.findMany({
+    where: { clientId },
+    take,
+    orderBy: { deliveryDate: 'desc' }, // o createdAt/date según tu modelo
+    include: {
+      client: true,
+      seller: true,
+      items: { include: { product: true } },
+    },
+  });
+}
 
   async findOrdersForToday() {
     const startOfDay = new Date();
