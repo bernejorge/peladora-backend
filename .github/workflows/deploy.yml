@@ -15,4 +15,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            bash /var/www/peladora/app/scripts/deploy.sh
+            set -e
+            cd /var/www/peladora/app
+            git fetch --all --prune
+            git reset --hard origin/master
+            bash scripts/deploy.sh
