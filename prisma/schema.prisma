@@ -143,7 +143,7 @@ model Order {
   seller     Seller?  @relation(fields: [sellerId], references: [id])
   sellerId   Int?
 
-  deliveryDate   DateTime       @default(now())  // ← fecha de entrega deseada
+  deliveryDate   DateTime   @db.Date @default(dbgenerated("CURRENT_DATE")) // ← fecha de entrega deseada
   deliveryAddress   String @default("")
   deliveryTimeSlot  String? @default("")
 

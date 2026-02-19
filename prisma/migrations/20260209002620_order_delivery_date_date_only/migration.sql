@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Order" ALTER COLUMN "deliveryDate" SET DEFAULT CURRENT_DATE,
+ALTER COLUMN "deliveryDate" SET DATA TYPE DATE;

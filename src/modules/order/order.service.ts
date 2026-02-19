@@ -1,23 +1,36 @@
-/* eslint-disable  */
-//order.service.ts
-
-import { Injectable, NotFoundException } from '@nestjs/common';
+/* eslint-disable */
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { OrderStatus, PaymentStatus } from 'src/generated/prisma/enums';
+import { OrderStatus } from 'src/generated/prisma/enums';
+import { parseLocalDate } from '../../utils/date-time.utils';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateOrderDto) {
+    // deliveryDate ahora es DATE en DB, así que lo tratamos como "YYYY-MM-DD"
+    // - Si viene, lo parseamos como fecha local (sin UTC)
+    // - Si no viene, lo omitimos para que Postgres use CURRENT_DATE
+    let deliveryDate: Date | undefined = undefined;
 
-    // Calculá fecha de entrega si no viene por body
-    const deliveryDate = data.deliveryDate
-      ? new Date(data.deliveryDate)
-      : getDefaultDeliveryDate();
-
+    if (data.deliveryDate) {
+      // soporta que te manden "YYYY-MM-DD" o Date
+      if (typeof data.deliveryDate === 'string') {
+        const parsed = parseLocalDate(data.deliveryDate);
+        if (!parsed) {
+          throw new BadRequestException(
+            'deliveryDate inválida. Usá formato YYYY-MM-DD.',
+          );
+        }
+        deliveryDate = parsed;
+      } else if ((data.deliveryDate as any) instanceof Date) {
+        // si llega Date, lo normalizamos a date-only local
+        deliveryDate = toLocalDateOnly(data.deliveryDate);
+      }
+    }
 
     // 1) Calcular totales de ítems
     const itemsData = data.items.map((item) => ({
@@ -29,43 +42,32 @@ export class OrderService {
 
     const total = itemsData.reduce((sum, i) => sum + i.lineTotal, 0);
 
-    // 2) Crear la orden con ítems en una transacción
+    // 2) Crear la orden
     const order = await this.prisma.order.create({
       data: {
         clientId: data.clientId,
         sellerId: data.sellerId,
         deliveryAddress: data.deliveryAddress,
         deliveryTimeSlot: data.deliveryTimeSlot,
-        deliveryDate: deliveryDate,
-        total: total,
-        items: {
-          create: itemsData,
-        },
+        ...(deliveryDate ? { deliveryDate } : {}), // si no viene, DB pone CURRENT_DATE
+        total,
+        items: { create: itemsData },
       },
-      include: {
-        items: true,
-      },
+      include: { items: true },
     });
 
     return order;
   }
 
- async findAll(filters?: any) {
-
+  async findAll(filters?: any) {
     return this.prisma.order.findMany({
       where: filters?.where || {},
       include: {
         client: true,
         seller: true,
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
       },
-      orderBy: filters?.orderBy || {
-        date: 'desc',
-      },
+      orderBy: filters?.orderBy || { date: 'desc' },
     });
   }
 
@@ -75,11 +77,7 @@ export class OrderService {
       include: {
         client: true,
         seller: true,
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
       },
     });
     if (!order) throw new NotFoundException(`Order ${id} not found`);
@@ -92,8 +90,13 @@ export class OrderService {
 
     const { items = [], ...orderData } = data;
 
-    // convertimos los items del DTO al formato que guardamos en la tabla orderItem
-    // y calculamos el total de línea (quantity * unitPrice)
+    // Si viene deliveryDate como string, lo normalizamos a Date date-only
+    if ((orderData as any).deliveryDate && typeof (orderData as any).deliveryDate === 'string') {
+      const parsed = parseLocalDate((orderData as any).deliveryDate);
+      if (!parsed) throw new BadRequestException('deliveryDate inválida. Usá YYYY-MM-DD.');
+      (orderData as any).deliveryDate = parsed;
+    }
+
     const itemsData = items.map((item) => ({
       productId: item.productId,
       quantity: item.quantity,
@@ -104,7 +107,6 @@ export class OrderService {
     const total = itemsData.reduce((sum, item) => sum + item.lineTotal, 0);
 
     return this.prisma.$transaction(async (tx) => {
-      // Si no hay campos en orderData, evitamos hacer un update innecesario.
       if (Object.keys(orderData).length > 0) {
         await tx.order.update({
           where: { id },
@@ -112,17 +114,11 @@ export class OrderService {
         });
       }
 
-      // Borramos TODOS los items actuales de la orden
       await tx.orderItem.deleteMany({ where: { orderId: id } });
 
       if (itemsData.length > 0) {
-        // Si hay items, insertarlos desde cero con createMany.
-        // Esto simplifica mucho el update (no hacemos diff item por item).
         await tx.orderItem.createMany({
-          data: itemsData.map((item) => ({
-            ...item,
-            orderId: id,
-          })),
+          data: itemsData.map((item) => ({ ...item, orderId: id })),
         });
       }
 
@@ -132,89 +128,58 @@ export class OrderService {
         include: {
           client: true,
           seller: true,
-          items: {
-            include: {
-              product: true,
-            },
-          },
+          items: { include: { product: true } },
         },
       });
     });
   }
 
   async remove(id: number) {
-    const order = await this.findOne(id);
-  
-    // Opcional: borrar los items automáticamente por cascada si lo tenés configurado
+    await this.findOne(id);
     return this.prisma.order.delete({ where: { id } });
   }
 
   async cancel(id: number) {
-    const order = await this.findOne(id);
-
-    const data: UpdateOrderDto = {
-      status: OrderStatus.CANCELED,
-    };
-
-    return this.update(id, data);
+    await this.findOne(id);
+    return this.update(id, { status: OrderStatus.CANCELED } as any);
   }
 
   async findLatestForClient(clientId: number, n: number = 10) {
-  const take = Number.isFinite(n) ? Math.max(1, Math.min(100, Math.floor(n))) : 10;
-
-  return this.prisma.order.findMany({
-    where: { clientId },
-    take,
-    orderBy: { deliveryDate: 'desc' }, // o createdAt/date según tu modelo
-    include: {
-      client: true,
-      seller: true,
-      items: { include: { product: true } },
-    },
-  });
-}
-
-  async findOrdersForToday() {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const take = Number.isFinite(n) ? Math.max(1, Math.min(100, Math.floor(n))) : 10;
 
     return this.prisma.order.findMany({
-      where: {
-        deliveryDate: {
-          gte: startOfDay,
-          lte: endOfDay,
-        },
-        status: {
-          in: ['DRAFT', 'PROCESSING'],
-        },
-      },
+      where: { clientId },
+      take,
+      orderBy: { deliveryDate: 'desc' }, // ahora es DATE, ok
       include: {
-        items: true,
         client: true,
         seller: true,
-      }
+        items: { include: { product: true } },
+      },
     });
   }
 
+  async findOrdersForToday() {
+    // Como deliveryDate es DATE, buscamos [hoy, hoy]
+    const today = todayLocalDateOnly();
 
+    return this.prisma.order.findMany({
+      where: {
+        deliveryDate: { gte: today, lte: today },
+        status: { in: ['DRAFT', 'PROCESSING'] },
+      },
+      include: { items: true, client: true, seller: true },
+    });
+  }
 }
 
-function getDefaultDeliveryDate(): Date {
+/** Devuelve "hoy" como Date local sin hora */
+function todayLocalDateOnly(): Date {
   const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
 
-  // Hora límite para delivery hoy
-  const LIMITE_HOY = 19; // 19:00
-
-  // Si el horario actual es antes de las 19, entregamos hoy; si no, day+1
-  if (now.getHours() < LIMITE_HOY) {
-    return now;
-  }
-  const tomorrow = new Date(now);
-  tomorrow.setDate(now.getDate() + 1);
-  // opcional: podés cero-hora si querés solo fecha
-  tomorrow.setHours(0, 0, 0, 0);
-
-  return tomorrow;
+/** Normaliza un Date cualquiera a fecha local sin hora */
+function toLocalDateOnly(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
