@@ -5,9 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-  moduleFormat    = "cjs"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -50,38 +50,38 @@ model Supplier {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
   unit        Unit
-  weight      Decimal   @db.Decimal(10, 3) @default(0)          // cantidad de kilos (o unidades)
-  price       Decimal   @db.Decimal(14, 2) @default(0) // precio de venta actual
+  weight      Decimal @default(0) @db.Decimal(10, 3) // cantidad de kilos (o unidades)
+  price       Decimal @default(0) @db.Decimal(14, 2) // precio de venta actual
 
   purchaseItems PurchaseItem[]
   orderItems    OrderItem[]
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   priceHistory PriceHistory[] // relación con tabla de historial
 }
 
 model PriceHistory {
-  id         Int      @id @default(autoincrement())
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  Int
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
 
-  price      Decimal  @db.Decimal(14, 2)  // precio registrado en ese momento
-  changedAt  DateTime @default(now())     // fecha/hora de registro del precio
+  price     Decimal  @db.Decimal(14, 2) // precio registrado en ese momento
+  changedAt DateTime @default(now()) // fecha/hora de registro del precio
 }
 
 model Purchase {
-  id           Int          @id @default(autoincrement())
-  supplier     Supplier        @relation(fields: [supplierId], references: [id])
-  supplierId   Int
-  status       PurchaseStatus  @default(DRAFT)
-  invoice      String?
-  date         DateTime        @default(now())
+  id         Int            @id @default(autoincrement())
+  supplier   Supplier       @relation(fields: [supplierId], references: [id])
+  supplierId Int
+  status     PurchaseStatus @default(DRAFT)
+  invoice    String?
+  date       DateTime       @default(now())
 
   items PurchaseItem[]
 
@@ -90,44 +90,47 @@ model Purchase {
 }
 
 model PurchaseItem {
-  id         Int    @id @default(autoincrement())
-  purchase   Purchase  @relation(fields: [purchaseId], references: [id])
+  id         Int      @id @default(autoincrement())
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
   purchaseId Int
-  product    Product   @relation(fields: [productId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
   productId  Int
 
-  quantity   Decimal   @db.Decimal(10, 3)
-  unitPrice  Decimal   @db.Decimal(14, 4)
-  lineTotal  Decimal   @db.Decimal(18, 4) // = quantity × unitPrice
+  quantity  Decimal @db.Decimal(10, 3)
+  unitPrice Decimal @db.Decimal(14, 4)
+  lineTotal Decimal @db.Decimal(18, 4) // = quantity × unitPrice
 
-  createdAt  DateTime  @default(now())
+  createdAt DateTime @default(now())
 }
 
 model Client {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String?   @unique
-  phone     String?
-  address   String?
-  notes     String?
-  orders    Order[]    // ← relación con órdenes
+  id      Int     @id @default(autoincrement())
+  name    String
+  email   String? @unique
+  phone   String?
+  address String?
+  notes   String?
+  orders  Order[] // ← relación con órdenes
 
   embedding Unsupported("vector")?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  account          Account?
+  accountMovements AccountMovement[]
+  payments         Payment[]
   // orders Order[]
 }
 
 model Seller {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   firstName String
   lastName  String
-  email     String?   @unique
+  email     String? @unique
   phone     String?
   notes     String?
-  orders    Order[]    // ← relación con órdenes
+  orders    Order[] // ← relación con órdenes
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -137,42 +140,44 @@ model Seller {
 }
 
 model Order {
-  id         Int            @id @default(autoincrement())
-  client     Client         @relation(fields: [clientId], references: [id])
-  clientId   Int
-  seller     Seller?  @relation(fields: [sellerId], references: [id])
-  sellerId   Int?
+  id       Int     @id @default(autoincrement())
+  client   Client  @relation(fields: [clientId], references: [id])
+  clientId Int
+  seller   Seller? @relation(fields: [sellerId], references: [id])
+  sellerId Int?
 
-  deliveryDate   DateTime   @db.Date @default(dbgenerated("CURRENT_DATE")) // ← fecha de entrega deseada
-  deliveryAddress   String @default("")
-  deliveryTimeSlot  String? @default("")
+  deliveryDate     DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date // ← fecha de entrega deseada
+  deliveryAddress  String   @default("")
+  deliveryTimeSlot String?  @default("")
 
-  date       DateTime       @default(now())
+  date DateTime @default(now())
 
-
-  status     OrderStatus    @default(DRAFT)
+  status        OrderStatus   @default(DRAFT)
   paymentStatus PaymentStatus @default(UNPAID)
 
-  items      OrderItem[]
+  items OrderItem[]
 
-  total      Decimal        @db.Decimal(18, 2) @default(0)
+  total Decimal @default(0) @db.Decimal(18, 2)
 
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  allocations PaymentAllocation[]
+
+  accountMovements AccountMovement[]
 }
 
-
 model OrderItem {
-  id        Int      @id @default(autoincrement())
-  order     Order    @relation(fields: [orderId], references: [id])
-  orderId   Int
+  id      Int   @id @default(autoincrement())
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int
 
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
   productId Int
 
-  quantity  Decimal  @db.Decimal(10, 3)
-  unitPrice Decimal  @db.Decimal(14, 2)
-  lineTotal Decimal  @db.Decimal(18, 2) // cantidad × precio unitario
+  quantity  Decimal @db.Decimal(10, 3)
+  unitPrice Decimal @db.Decimal(14, 2)
+  lineTotal Decimal @db.Decimal(18, 2) // cantidad × precio unitario
 
   createdAt DateTime @default(now())
 }
@@ -185,10 +190,170 @@ enum OrderStatus {
   COMPLETED
   CANCELED
 }
+
 enum PaymentStatus {
   UNPAID
   PENDING
   PARTIALLY_PAID
   PAID
   REFUNDED
+}
+
+// ================================
+// ENUMS - Payments / Account Ledger
+// ================================
+enum AccountMovementType {
+  DEBIT_ORDER // genera deuda (+)
+  CREDIT_PAYMENT // registra pago (-)
+  ADJUSTMENT // ajuste manual (+/-)
+  REVERSAL // reversa de un movimiento previo (+/-)
+}
+
+// ================================
+// MODELOS - Cuenta Corriente
+// ================================
+model Account {
+  id Int @id @default(autoincrement())
+
+  client   Client @relation(fields: [clientId], references: [id])
+  clientId Int    @unique // 1 cuenta por cliente
+
+  // positivo = deuda, negativo = crédito a favor
+  balance Decimal @default(0) @db.Decimal(18, 2)
+
+  // Optimistic locking opcional
+  version Int @default(0)
+
+  movements AccountMovement[]
+  payments  Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientId])
+}
+
+model AccountMovement {
+  id Int @id @default(autoincrement())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  client   Client @relation(fields: [clientId], references: [id])
+  clientId Int
+
+  type AccountMovementType
+
+  // Convención:
+  // - DEBIT_ORDER: amount > 0
+  // - CREDIT_PAYMENT: amount < 0
+  // - ADJUSTMENT/REVERSAL: puede ser +/- según caso
+  amount Decimal @db.Decimal(18, 2)
+
+  // Fecha "contable" del movimiento (no necesariamente createdAt)
+  date DateTime @default(now())
+
+  // Para trazabilidad (los agregamos después):
+  // orderId   Int?
+  // paymentId Int?
+  orderId Int?
+  order   Order? @relation(fields: [orderId], references: [id])
+
+  paymentId Int?
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+
+  // Reversa opcional: este movimiento revierte a otro
+  reversedMovementId Int?
+  reversedMovement   AccountMovement?  @relation("AccountMovementReversal", fields: [reversedMovementId], references: [id])
+  reversals          AccountMovement[] @relation("AccountMovementReversal")
+
+  // Para idempotencia / referencia externa (comprobante, importaciones, etc.)
+  externalRef String?
+
+  note String?
+
+  createdAt DateTime @default(now())
+
+  // Si querés idempotencia fuerte, podés activar esto,
+  // pero solo si estás seguro que externalRef viene siempre bien:
+  // @@unique([accountId, externalRef])
+
+  // Índices típicos para extractos/consultas
+  @@index([accountId, date])
+  @@index([clientId, date])
+  @@index([type, date])
+  @@index([orderId])
+  @@index([paymentId])
+}
+
+enum PaymentMethod {
+  CASH
+  TRANSFER
+  CARD
+  MERCADOPAGO
+  OTHER
+}
+
+enum PaymentStatus2 {
+  RECORDED // registrado (por defecto)
+  VOIDED // anulado
+  REFUNDED // devuelto
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  client   Client @relation(fields: [clientId], references: [id])
+  clientId Int
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  date DateTime @default(now())
+
+  amount Decimal @db.Decimal(18, 2) // monto del pago
+
+  method PaymentMethod  @default(TRANSFER)
+  status PaymentStatus2 @default(RECORDED)
+
+  // Para idempotencia / comprobante
+  reference String?
+  note      String?
+
+  // Imputaciones a órdenes
+  allocations PaymentAllocation[]
+
+  // Si querés vincular el movimiento contable que creó este pago:
+  // (1 pago -> 1 movimiento CREDIT_PAYMENT)
+  movements AccountMovement[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Si reference es confiable para evitar duplicados:
+  // @@unique([clientId, reference])
+
+  @@index([clientId, date])
+  @@index([accountId, date])
+  @@index([reference])
+}
+
+model PaymentAllocation {
+  id Int @id @default(autoincrement())
+
+  payment   Payment @relation(fields: [paymentId], references: [id])
+  paymentId Int
+
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int
+
+  amountApplied Decimal @db.Decimal(18, 2)
+
+  createdAt DateTime @default(now())
+
+  // Si querés asegurar 1 fila por par payment+order:
+  // @@unique([paymentId, orderId])
+
+  @@index([paymentId])
+  @@index([orderId])
 }
