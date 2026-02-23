@@ -48,3 +48,33 @@ export const PaymentStatus = {
 } as const
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const AccountMovementType = {
+  DEBIT_ORDER: 'DEBIT_ORDER',
+  CREDIT_PAYMENT: 'CREDIT_PAYMENT',
+  ADJUSTMENT: 'ADJUSTMENT',
+  REVERSAL: 'REVERSAL'
+} as const
+
+export type AccountMovementType = (typeof AccountMovementType)[keyof typeof AccountMovementType]
+
+
+export const PaymentMethod = {
+  CASH: 'CASH',
+  TRANSFER: 'TRANSFER',
+  CARD: 'CARD',
+  MERCADOPAGO: 'MERCADOPAGO',
+  OTHER: 'OTHER'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentStatus2 = {
+  RECORDED: 'RECORDED',
+  VOIDED: 'VOIDED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus2 = (typeof PaymentStatus2)[keyof typeof PaymentStatus2]

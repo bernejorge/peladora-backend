@@ -59,7 +59,11 @@ export const ModelName = {
   Client: 'Client',
   Seller: 'Seller',
   Order: 'Order',
-  OrderItem: 'OrderItem'
+  OrderItem: 'OrderItem',
+  Account: 'Account',
+  AccountMovement: 'AccountMovement',
+  Payment: 'Payment',
+  PaymentAllocation: 'PaymentAllocation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -201,6 +205,64 @@ export const OrderItemScalarFieldEnum = {
 } as const
 
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
+
+
+export const AccountScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  balance: 'balance',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const AccountMovementScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  clientId: 'clientId',
+  type: 'type',
+  amount: 'amount',
+  date: 'date',
+  orderId: 'orderId',
+  paymentId: 'paymentId',
+  reversedMovementId: 'reversedMovementId',
+  externalRef: 'externalRef',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type AccountMovementScalarFieldEnum = (typeof AccountMovementScalarFieldEnum)[keyof typeof AccountMovementScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  accountId: 'accountId',
+  date: 'date',
+  amount: 'amount',
+  method: 'method',
+  status: 'status',
+  reference: 'reference',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentAllocationScalarFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  orderId: 'orderId',
+  amountApplied: 'amountApplied',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentAllocationScalarFieldEnum = (typeof PaymentAllocationScalarFieldEnum)[keyof typeof PaymentAllocationScalarFieldEnum]
 
 
 export const SortOrder = {
