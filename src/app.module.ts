@@ -9,7 +9,6 @@ import { SellerModule } from './modules/seller/seller.module';
 import { ClientModule } from './modules/client/client.module';
 import { OrderModule } from './modules/order/order.module';
 import { AgentToolsModule } from './modules/agent-tools/agent-tools.module';
-import { AccountingModule } from './accounting/accounting.module';
 import { AccountingModule } from './modules/accounting/accounting.module';
 
 

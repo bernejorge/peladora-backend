@@ -5,10 +5,14 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderStatus } from 'src/generated/prisma/enums';
 import { parseLocalDate } from '../../utils/date-time.utils';
+import { AccountingService } from '../accounting/accounting.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly accountingService: AccountingService,
+  ) {}
 
   async create(data: CreateOrderDto) {
     // deliveryDate ahora es DATE en DB, así que lo tratamos como "YYYY-MM-DD"
@@ -54,6 +58,13 @@ export class OrderService {
         items: { create: itemsData },
       },
       include: { items: true },
+    });
+
+    await this.accountingService.onOrderCreated({
+      orderId: order.id,
+      clientId: order.clientId,
+      orderTotal: order.total,
+      date: order.date,
     });
 
     return order;
@@ -141,7 +152,16 @@ export class OrderService {
 
   async cancel(id: number) {
     await this.findOne(id);
-    return this.update(id, { status: OrderStatus.CANCELED } as any);
+    const cancelledOrder = await this.update(id, {
+      status: OrderStatus.CANCELED,
+    } as any);
+
+    await this.accountingService.onOrderCancelled({
+      orderId: id,
+      date: new Date(),
+    });
+
+    return cancelledOrder;
   }
 
   async findLatestForClient(clientId: number, n: number = 10) {
